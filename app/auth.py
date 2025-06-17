@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 
 # Configuración
-SECRET_KEY = "tu_clave_secreta_muylarga"  # Cambia esto por algo seguro
+SECRET_KEY = "tu_clave_secreta_muylarga"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

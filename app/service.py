@@ -1,10 +1,10 @@
 import grpc
 from concurrent import futures
 from bson import ObjectId, errors as bson_errors
-
 from app.database import get_db
 import app.proto.user_pb2 as user_pb2
 import app.proto.user_pb2_grpc as user_pb2_grpc
+
 
 class UserService(user_pb2_grpc.UserServiceServicer):
     def __init__(self):
@@ -88,3 +88,11 @@ class UserService(user_pb2_grpc.UserServiceServicer):
                 email=user["email"]
             ))
         return user_pb2.UserListResponse(users=user_list)
+
+def serve():
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    user_pb2_grpc.add_UserServiceServicer_to_server(UserService(), server)
+    server.add_insecure_port('[::]:50051')
+    server.start()
+    print("gRPC UserService running on port 50051")
+    server.wait_for_termination()

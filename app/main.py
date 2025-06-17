@@ -7,6 +7,8 @@ from app.auth import (
     get_current_user
 )
 from fastapi.security import OAuth2PasswordRequestForm
+import threading
+from app.service import serve as grpc_serve
 
 app = FastAPI()
 client = MongoClient("mongodb://localhost:27017/")
@@ -82,3 +84,12 @@ def delete_user(user_id: str, current_user=Depends(get_current_user)):
     if result.deleted_count:
         return {"msg": "Usuario eliminado"}
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+def start_grpc():
+    grpc_serve()
+
+if __name__ == "__main__":
+    import uvicorn
+    t = threading.Thread(target=start_grpc, daemon=True)
+    t.start()
+    uvicorn.run(app, host="0.0.0.0", port=8000)
