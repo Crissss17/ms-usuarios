@@ -3,23 +3,30 @@ syntax = "proto3";
 package user;
 
 service UserService {
-  rpc CreateUser (UserRequest) returns (UserResponse);
-  rpc GetUser (UserIdRequest) returns (UserResponse);
-  rpc UpdateUser (UserRequest) returns (UserResponse);
-  rpc DeleteUser (UserIdRequest) returns (Empty);
+  rpc CreateUser (CreateUserRequest) returns (UserResponse);
+  rpc GetUser (GetUserRequest) returns (UserResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (UserResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (Empty);
   rpc ListUsers (Empty) returns (UserListResponse);
+
+  rpc Register (RegisterRequest) returns (RegisterResponse);
+  rpc Login (LoginRequest) returns (LoginResponse);
 }
 
-message UserRequest {
+message CreateUserRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+}
+message GetUserRequest { string id = 1; }
+message UpdateUserRequest {
   string id = 1;
   string username = 2;
   string email = 3;
   string password = 4;
 }
-
-message UserIdRequest {
-  string id = 1;
-}
+message DeleteUserRequest { string id = 1; }
+message Empty {}
 
 message UserResponse {
   string id = 1;
@@ -31,4 +38,19 @@ message UserListResponse {
   repeated UserResponse users = 1;
 }
 
-message Empty {}
+message RegisterRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+}
+message RegisterResponse {
+  string id = 1;
+}
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+message LoginResponse {
+  string access_token = 1;
+  string token_type = 2;
+}
